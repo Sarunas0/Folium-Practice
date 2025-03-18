@@ -1,0 +1,53 @@
+import numpy as np  # useful for many scientific computing in Python
+import pandas as pd # primary data structure library
+
+
+import folium
+
+print('Folium installed and imported!')
+
+
+# define the world map
+world_map = folium.Map()
+
+# display world map
+world_map
+
+
+
+df_incidents = pd.read_csv('https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DV0101EN-SkillsNetwork/Data%20Files/Police_Department_Incidents_-_Previous_Year__2016_.csv')
+
+print('Dataset downloaded and read into a pandas dataframe!')
+
+
+# San Francisco latitude and longitude values
+latitude = 37.77
+longitude = -122.42
+
+
+# create map and display it
+sanfran_map = folium.Map(location=[latitude, longitude], zoom_start=12)
+
+# display the map of San Francisco
+sanfran_map
+
+
+
+# instantiate a feature group for the incidents in the dataframe
+incidents = folium.map.FeatureGroup()
+
+# loop through the 100 crimes and add each to the incidents feature group
+for lat, lng, in zip(df_incidents.Y, df_incidents.X):
+    incidents.add_child(
+        folium.vector_layers.CircleMarker(
+            [lat, lng],
+            radius=5, # define how big you want the circle markers to be
+            color='yellow',
+            fill=True,
+            fill_color='blue',
+            fill_opacity=0.6
+        )
+    )
+
+# add incidents to map
+sanfran_map.add_child(incidents)
